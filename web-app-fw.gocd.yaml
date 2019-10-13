@@ -1,0 +1,32 @@
+format_version: 3
+pipelines:
+  web-app-fw:
+    group: My-Pipelines
+    label_template: ${COUNT}
+    lock_behavior: none
+    display_order: -1
+    materials:
+      scm:
+        git: https://github.com/andrewmurray/web-app-fw.git
+        shallow_clone: false
+        auto_update: true
+        branch: master
+        name: scm
+    stages:
+    - Build:
+        fetch_materials: true
+        keep_artifacts: false
+        clean_workspace: false
+        approval:
+          type: success
+          allow_only_on_success: false
+        jobs:
+          dotnet-build:
+            timeout: 0
+            tasks:
+            - exec:
+                arguments:
+                - build
+                - web-app-fw.sln
+                command: dotnet
+                run_if: passed
